@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   const backgroundImage =
@@ -33,15 +34,21 @@ export default function Home() {
           <p className="text-lg  text-gray-800 font-medium text-center mb-2">
             New user? Sign up today!
           </p>
-          <button className="w-full py-3 px-6 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition duration-300">
-            Sign Up
-          </button>
+          <Link href='/signup'>
+            <button className="w-full py-3 px-6 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition duration-300">
+              Sign Up
+            </button>
+          </Link>
+
           <p className="text-lg  text-gray-800 font-medium text-center mt-4">
             Already a user? Sign in to continue.
           </p>
-          <button className="w-full py-3 px-6 bg-white text-blue-600 border border-blue-600 rounded-lg shadow hover:bg-blue-50 transition duration-300">
-            Login
-          </button>
+          <Link href='/login'>
+            
+            <button className="w-full py-3 px-6 bg-white text-blue-600 border border-blue-600 rounded-lg shadow hover:bg-blue-50 transition duration-300">
+              Login
+            </button>
+          </Link>
         </div>
       </div>
     </main>
