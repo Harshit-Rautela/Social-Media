@@ -50,7 +50,7 @@ const SignUpForm = () => {
               name="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+              className="mt-1 p-3 border  bg-gray-800 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               required
             />
           </label>
@@ -74,7 +74,7 @@ const SignUpForm = () => {
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 p-3 border bg-gray-900 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+              className="mt-1 p-3 border bg-gray-800 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               required
             />
           </label>

@@ -2,6 +2,7 @@ import { hash } from "bcryptjs";
 import User from "@models/User";
 import { connectToDB } from "@utils/database";
 
+//just like in traditional express servers. we use req.json, in the nextJs, the specific syntax is new Response().
 export const POST = async (req) => {
   try {
     const { name, password } = await req.json();
