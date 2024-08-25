@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 let isConnected = false;
-const MongoDBURI = process.env.MONGODB_URI;
 
 export const connectToDB = async () => {
   mongoose.set("strictQuery", true);
@@ -10,7 +9,11 @@ export const connectToDB = async () => {
     return;
   }
   try {
-    await mongoose.connect(MongoDBURI);
+    await mongoose.connect(process.env.MONGODB_URI,{
+      dbName: "social_media",
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     isConnected = true;
     console.log("MongoDB is connected");
   } catch (error) {

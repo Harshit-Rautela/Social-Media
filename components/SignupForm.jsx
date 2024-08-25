@@ -2,7 +2,7 @@
 import { signIn } from "next-auth/react";
 import React, { useState } from "react";
 
-const LoginForm = () => {
+const SignUpForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -10,17 +10,20 @@ const LoginForm = () => {
     "https://img.freepik.com/free-vector/geometric-gradient-futuristic-background_23-2149116406.jpg";
     const handleSubmit = async(e)=>{
       e.preventDefault();
-      const result = await signIn('credentials',{
-        redirect:false,
-        name,
-        email,
-        password,
-        signup:false
+      const response = await fetch('/api/auth/register',{
+        method:'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:JSON.stringify({
+          name,password
+        })
       })
-      if(result.ok){
-        console.log('Login is successful')
+      const data = await response.json();
+      if(response.ok){
+        console.log('Sign Up is successful')
+        alert('Signup success')
       }else{
-        console.error("Login failed:", result.error);
+        console.error("Sign Up failed:", data.error);
+        alert('Signup failed')
       }
     }
 
@@ -36,7 +39,7 @@ const LoginForm = () => {
       ></div>
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
-          Login
+          Sign Up
         </h1>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <label htmlFor="name" className="flex flex-col">
@@ -71,7 +74,7 @@ const LoginForm = () => {
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+              className="mt-1 p-3 border bg-gray-900 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               required
             />
           </label>
@@ -79,7 +82,7 @@ const LoginForm = () => {
             className="w-full py-3 mt-4 bg-blue-400 text-white rounded-lg shadow hover:bg-blue-800 transition duration-300"
             type="submit"
           >
-            Login
+            Sign Up
           </button>
         </form>
       </div>
@@ -87,4 +90,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default SignUpForm;
