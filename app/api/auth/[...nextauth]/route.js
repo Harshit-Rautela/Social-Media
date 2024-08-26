@@ -14,10 +14,8 @@ const handler = NextAuth({
         password: { label: "password", type: "password" },
       },
       async authorize(credentials) {
-        console.log("Connected to DB");
         await connectToDB();
         try {
-          console.log("Authorize function called with:", credentials);
           const user = await User.findOne({ userName: credentials.name });
           if (!user) {
             throw new Error("No user with this username is present");
