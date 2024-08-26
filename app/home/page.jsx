@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const Home = () => {
+  //since useSession returns two properties, data and status, here data is destructured and renamed to session.
   const { data: session } = useSession();
   const router = useRouter();
   console.log(session);

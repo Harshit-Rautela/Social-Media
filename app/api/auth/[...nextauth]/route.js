@@ -19,8 +19,6 @@ const handler = NextAuth({
           const user = await User.findOne({ userName: credentials.name });
           if (!user) {
             throw new Error("No user with this username is present");
-          } else {
-            console.log("User is valid", user);
           }
           const isValid = await compare(credentials.password, user.password);
           if (!isValid) {
