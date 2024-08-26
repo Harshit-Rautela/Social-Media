@@ -43,7 +43,7 @@ export default function Home() {
           <p className="text-lg  text-gray-800 font-medium text-center mt-4">
             Already a user? Sign in to continue.
           </p>
-          <Link href='/login'>
+          <Link href='/auth/login'>
             
             <button className="w-full py-3 px-6 bg-white text-blue-600 border border-blue-600 rounded-lg shadow hover:bg-blue-50 transition duration-300">
               Login

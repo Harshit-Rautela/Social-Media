@@ -1,28 +1,33 @@
-'use client'
+"use client";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const LoginForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
   const backgroundImage =
     "https://img.freepik.com/free-vector/geometric-gradient-futuristic-background_23-2149116406.jpg";
-    const handleSubmit = async(e)=>{
-      e.preventDefault();
-      const result = await signIn('credentials',{
-        redirect:false,
-        name,
-        email,
-        password,
-        signup:false
-      })
-      if(result.ok){
-        console.log('Login is successful')
-      }else{
-        console.error("Login failed:", result.error);
-      }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const result = await signIn("credentials", {
+      name,
+      password,
+      redirect:false
+    });
+    console.log(result);
+    if (result?.ok) {
+      console.log("Login is successful");
+      alert("Login is successful");
+      router.push("/home");
+    } else {
+      console.error("Login failed:", result?.error || "Unknown error");
+      alert("Login failed");
     }
+  };
 
   return (
     <main className="flex min-h-screen items-center justify-center">
@@ -47,7 +52,7 @@ const LoginForm = () => {
               name="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+              className="mt-1 p-3 border bg-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               required
             />
           </label>
@@ -71,7 +76,7 @@ const LoginForm = () => {
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+              className="mt-1 p-3 border bg-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               required
             />
           </label>

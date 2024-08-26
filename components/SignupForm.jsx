@@ -1,31 +1,35 @@
-'use client'
-import { signIn } from "next-auth/react";
+"use client";
+
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const SignUpForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
   const backgroundImage =
     "https://img.freepik.com/free-vector/geometric-gradient-futuristic-background_23-2149116406.jpg";
-    const handleSubmit = async(e)=>{
-      e.preventDefault();
-      const response = await fetch('/api/auth/register',{
-        method:'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:JSON.stringify({
-          name,password
-        })
-      })
-      const data = await response.json();
-      if(response.ok){
-        console.log('Sign Up is successful')
-        alert('Signup success')
-      }else{
-        console.error("Sign Up failed:", data.error);
-        alert('Signup failed')
-      }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const response = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        password,
+      }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      console.log("Sign Up is successful");
+      alert("Signup success");
+      router.push("/login");
+    } else {
+      console.error("Sign Up failed:", data.error);
+      alert("Signup failed");
     }
+  };
 
   return (
     <main className="flex min-h-screen items-center justify-center">

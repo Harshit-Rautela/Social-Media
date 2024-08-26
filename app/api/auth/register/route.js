@@ -1,7 +1,8 @@
 import { hash } from "bcryptjs";
 import User from "@models/User";
 import { connectToDB } from "@utils/database";
-
+import { getSession,getToken } from "next-auth/react";
+import nextAuth from "next-auth";
 //just like in traditional express servers. we use res.json, in the nextJs, the specific syntax is new Response().
 export const POST = async (req) => {
   try {
