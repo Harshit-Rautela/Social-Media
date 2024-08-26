@@ -40,22 +40,19 @@ const handler = NextAuth({
   callbacks: {
     //this jwt callback is called everytime the token is create or updated. Here after successful creation and return of the user object in authorize function,
     //then this jwt callback is immediately run to create the token(which can contain some initial data or be empty) by adding user id in it
-    async jwt({ token, account, user }) {
+    async jwt({ token, user }) {
       if (user) {
         //since user here contains the user object returned from the above asuthorize function, so we have uses user.id, not user._id
         token.id = user.id;
         token.name = user.name;
       }
-      if (account) {
-        token.accessToken = account.access_token;
-      }
+  
       return token;
     },
     //after this creation of token, now session callback is done to create a session. Here this initial session object also contains basic info, and now we are customising it.
     async session({ token, session }) {
       session.user.id = token.id;
       session.user.name = token.name;
-      session.accessToken = token.accessToken;
       return session;
     },
   },
