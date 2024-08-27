@@ -3,6 +3,7 @@ import { connectToDB } from "@utils/database";
 import User from "@models/User";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
+import Profile from "@models/Profile";
 
 const handler = NextAuth({
   providers: [
@@ -24,7 +25,12 @@ const handler = NextAuth({
           if (!isValid) {
             throw new Error("Invalid password.");
           }
-          return { id: user._id.toString(), name: user.userName };
+          const profile = await Profile.findOne({ userId: user._id });
+          return {
+            id: user._id.toString(),
+            name: user.userName,
+            profile,
+          };
         } catch (error) {
           console.log("Error in authorization: ", error.message);
           return null;
@@ -45,14 +51,15 @@ const handler = NextAuth({
         //since user here contains the user object returned from the above asuthorize function, so we have uses user.id, not user._id
         token.id = user.id;
         token.name = user.name;
+        token.profile = user.profile;
       }
-  
       return token;
     },
     //after this creation of token, now session callback is done to create a session. Here this initial session object also contains basic info, and now we are customising it.
     async session({ token, session }) {
       session.user.id = token.id;
       session.user.name = token.name;
+      session.user.profile = token.profile;
       return session;
     },
   },

@@ -1,8 +1,9 @@
 import { hash } from "bcryptjs";
 import User from "@models/User";
 import { connectToDB } from "@utils/database";
-import { getSession,getToken } from "next-auth/react";
+import { getSession, getToken } from "next-auth/react";
 import nextAuth from "next-auth";
+import Profile from "@models/Profile";
 //just like in traditional express servers. we use res.json, in the nextJs, the specific syntax is new Response().
 export const POST = async (req) => {
   try {
@@ -27,14 +28,18 @@ export const POST = async (req) => {
     }
 
     const hashedPassword = await hash(password, 10);
-    const user = await User.create({
+    const newUser = await User.create({
       userName: name,
       password: hashedPassword,
     });
 
-    return new Response(JSON.stringify(user), {
-      status: 201,
+    const newProfile = await Profile.create({
+      userId: newUser._id,
     });
+    return new Response(
+      JSON.stringify({ user: newUser, profile: newProfile }),
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Error in POST /api/auth/register:", error.message);
     return new Response(JSON.stringify({ message: "Error creating user." }), {

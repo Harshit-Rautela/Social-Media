@@ -3,7 +3,7 @@
 import SignUpForm from "@components/SignupForm";
 import React from "react";
 
-const Login = () => {
+const SignUp = () => {
   return (
     <div>
       <SignUpForm/>
@@ -11,4 +11,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;

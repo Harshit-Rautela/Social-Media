@@ -24,7 +24,7 @@ const SignUpForm = () => {
     if (response.ok) {
       console.log("Sign Up is successful");
       alert("Signup success");
-      router.push("/login");
+      router.push("/auth/login");
     } else {
       console.error("Sign Up failed:", data.error);
       alert("Signup failed");
