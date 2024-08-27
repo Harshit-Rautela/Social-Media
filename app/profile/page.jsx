@@ -14,7 +14,7 @@ const Profile = () => {
       router.push("./auth/login");
       return;
     }
-    console.log('session user id is:',session.user.id)
+   
 
     const fetchProfileData = async () => {
       try {
@@ -55,6 +55,13 @@ const Profile = () => {
             className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
           >
             Back to Home
+          </button>
+          <br/>
+          <button
+            onClick={() => router.push("/profile/update")}
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
+          >
+            Update Profile
           </button>
         </div>
       </div>
