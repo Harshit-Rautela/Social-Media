@@ -30,6 +30,7 @@ export const GET = async (req, { params }) => {
   try {
     await connectToDB();
     const { userId } = params;
+
     const profile = await Profile.findOne({ userId });
     if (!profile) {
       return new Response(JSON.stringify("Profile is not present"), {

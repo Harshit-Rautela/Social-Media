@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-const page = () => {
+const updatePage = () => {
   const [bio, setBio] = useState("");
   const [image, setImage] = useState(null);
   const { data: session } = useSession();
@@ -83,4 +83,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default updatePage;
