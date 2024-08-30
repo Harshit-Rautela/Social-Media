@@ -14,7 +14,6 @@ const Profile = () => {
       router.push("./auth/login");
       return;
     }
-   
 
     const fetchProfileData = async () => {
       try {
@@ -49,6 +48,15 @@ const Profile = () => {
           <p className="text-lg font-semibold text-gray-700">Bio:</p>
           <p className="text-gray-600">{profile.bio || "No bio available"}</p>
         </div>
+        {profile.profilePicture && (
+          <div className="mb-4 flex justify-center">
+            <img
+              src={profile.profilePicture}
+              alt="Profile Picture"
+              className="w-32 h-32 object-cover rounded-full"
+            />
+          </div>
+        )}
         <div className="flex justify-center">
           <button
             onClick={() => router.push("/home")}
@@ -56,7 +64,7 @@ const Profile = () => {
           >
             Back to Home
           </button>
-          <br/>
+          <br />
           <button
             onClick={() => router.push("/profile/update")}
             className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
