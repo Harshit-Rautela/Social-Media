@@ -4,15 +4,15 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 const CreatePost = () => {
-    const { data: session} = useSession();
+  const { data: session } = useSession();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [image, setImage] = useState(null);
   const [tags, setTags] = useState('');
   const [location, setLocation] = useState('');
   const [privacy, setPrivacy] = useState('Public');
   const router = useRouter();
-  const backgroundImage = 'https://img.freepik.com/free-psd/social-media-sales-background_23-2151465320.jpg'
+  const backgroundImage = 'https://img.freepik.com/free-psd/social-media-sales-background_23-2151465320.jpg';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,7 +20,9 @@ const CreatePost = () => {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('content', content);
-      formData.append('imageUrl', imageUrl);
+      if (image) {
+        formData.append('image', image);
+      }
       formData.append('tags', tags);
       formData.append('location', location);
       formData.append('privacy', privacy);
@@ -53,13 +55,9 @@ const CreatePost = () => {
           Create a New Post
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Title input */}
           <div>
-            <label
-              htmlFor="title"
-              className="block text-sm font-medium text-gray-200 mb-2"
-            >
-              Title
-            </label>
+            <label htmlFor="title" className="block text-sm font-medium text-gray-200 mb-2">Title</label>
             <input
               id="title"
               type="text"
@@ -69,13 +67,10 @@ const CreatePost = () => {
               className="block w-full rounded-md border-gray-600 bg-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 text-gray-200"
             />
           </div>
+          
+          {/* Content textarea */}
           <div>
-            <label
-              htmlFor="content"
-              className="block text-sm font-medium text-gray-200 mb-2"
-            >
-              Content
-            </label>
+            <label htmlFor="content" className="block text-sm font-medium text-gray-200 mb-2">Content</label>
             <textarea
               id="content"
               value={content}
@@ -85,29 +80,22 @@ const CreatePost = () => {
               className="block w-full rounded-md border-gray-600 bg-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 text-gray-200"
             />
           </div>
+
+          {/* Image file input */}
           <div>
-            <label
-              htmlFor="imageUrl"
-              className="block text-sm font-medium text-gray-200 mb-2"
-            >
-              Image URL
-            </label>
+            <label htmlFor="image" className="block text-sm font-medium text-gray-200 mb-2">Image</label>
             <input
-              type="text"
-              id="imageUrl"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="Enter image URL (optional)"
+              type="file"
+              id="image"
+              accept="image/*"
+              onChange={(e) => setImage(e.target.files[0])}
               className="block w-full rounded-md border-gray-600 bg-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 text-gray-200"
             />
           </div>
+          
+          {/* Tags input */}
           <div>
-            <label
-              htmlFor="tags"
-              className="block text-sm font-medium text-gray-200 mb-2"
-            >
-              Tags
-            </label>
+            <label htmlFor="tags" className="block text-sm font-medium text-gray-200 mb-2">Tags</label>
             <input
               id="tags"
               type="text"
@@ -117,13 +105,10 @@ const CreatePost = () => {
               className="block w-full rounded-md border-gray-600 bg-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 text-gray-200"
             />
           </div>
+          
+          {/* Location input */}
           <div>
-            <label
-              htmlFor="location"
-              className="block text-sm font-medium text-gray-200 mb-2"
-            >
-              Location
-            </label>
+            <label htmlFor="location" className="block text-sm font-medium text-gray-200 mb-2">Location</label>
             <input
               id="location"
               type="text"
@@ -133,13 +118,10 @@ const CreatePost = () => {
               className="block w-full rounded-md border-gray-600 bg-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 text-gray-200"
             />
           </div>
+
+          {/* Privacy select */}
           <div>
-            <label
-              htmlFor="privacy"
-              className="block text-sm font-medium text-gray-200 mb-2"
-            >
-              Privacy
-            </label>
+            <label htmlFor="privacy" className="block text-sm font-medium text-gray-200 mb-2">Privacy</label>
             <select
               id="privacy"
               value={privacy}
@@ -151,6 +133,8 @@ const CreatePost = () => {
               <option value="Private">Private</option>
             </select>
           </div>
+
+          {/* Submit button */}
           <button
             type="submit"
             className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

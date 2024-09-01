@@ -66,13 +66,13 @@ export const PUT = async (req, { params }) => {
     profile.bio = bio;
     
     if (image) {
-      console.log("Inside the image/formdata section");
+      // console.log("Inside the image/formdata section");
       const buffer = Buffer.from(await image.arrayBuffer());
 
       // Process image with Sharp
       const optimizedBuffer = await sharp(buffer)
         .resize({ width: 800 }) // Resize to a maximum width of 800px
-        .jpeg({ quality: 80 }) // Convert to JPEG with 80% quality
+        .jpeg({ quality: 90 }) // Convert to JPEG with 80% quality
         .toBuffer();
 
       // Upload image to Cloudinary and wait for completion
@@ -82,9 +82,9 @@ export const PUT = async (req, { params }) => {
       profile.profilePicture = uploadResult.secure_url;
     }
     
-    console.log("Updated profile object before saving:", profile);
+    // console.log("Updated profile object before saving:", profile);
     await profile.save();
-    console.log("Profile saved successfully!");
+    // console.log("Profile saved successfully!");
 
     return new Response(
       JSON.stringify({ message: "Profile updated successfully" }),

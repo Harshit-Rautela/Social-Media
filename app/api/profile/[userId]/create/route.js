@@ -2,6 +2,7 @@ import { connectToDB } from "@utils/database";
 import Post from "@models/Post";
 import { v2 as cloudinary } from "cloudinary";
 import Profile from "@models/Profile";
+import sharp from "sharp";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -9,6 +10,19 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+const uploadToCloudinary = (buffer) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader
+      .upload_stream({ resource_type: "auto" }, (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      })
+      .end(buffer);
+  });
+};
 export const POST = async (req, { params }) => {
   await connectToDB();
   //this userId is actually the default _id of User which is ofcourse stored as userId for Profile.
@@ -20,19 +34,30 @@ export const POST = async (req, { params }) => {
         status: 404,
       });
     }
-    console.log(profile);
-    console.log(profile._id);
     const formData = await req.formData();
     const title = formData.get("title");
     const content = formData.get("content");
-    const imageUrl = formData.get("imageUrl");
+    const imageUrl = formData.get("image");
     const tags = formData.get("tags");
     const location = formData.get(" location");
     const privacy = formData.get("privacy");
+    let image = "";
+    if (imageUrl) {
+      console.log(imageUrl);
+      const buffer = Buffer.from(await imageUrl.arrayBuffer());
+      const optimisedBuffer = await sharp(buffer)
+        .resize({ width: 800 }) // Resize to a maximum width of 800px
+        .jpeg({ quality: 90 }) // Convert to JPEG with 80% quality
+        .toBuffer();
+        const response = await uploadToCloudinary(optimisedBuffer);
+        console.log("The image is:",response);
+        image = response.secure_url;
+        console.log("The image URL is:",image)
+    }
     const newPost = new Post({
       title,
       content,
-      imageUrl,
+      imageUrl:image,
       tags,
       location,
       privacy,

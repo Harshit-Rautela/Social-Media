@@ -7,6 +7,7 @@ const Profile = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [profile, setProfile] = useState(null);
+  const [posts,setPosts] = useSession([]);
 
   useEffect(() => {
     if (status === "loading") return;
@@ -27,6 +28,7 @@ const Profile = () => {
     };
     fetchProfileData();
   }, [session, router, status]);
+  
   if (status === "loading" || !profile) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-100">
