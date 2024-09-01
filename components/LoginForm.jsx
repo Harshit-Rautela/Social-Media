@@ -21,7 +21,6 @@ const LoginForm = () => {
     console.log(result);
     if (result?.ok) {
       console.log("Login is successful");
-      alert("Login is successful");
       router.push("/home");
     } else {
       console.error("Login failed:", result?.error || "Unknown error");
