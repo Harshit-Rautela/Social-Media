@@ -61,7 +61,7 @@ export const POST = async (req, { params }) => {
       tags,
       location,
       privacy,
-      authorId: profile._id,
+      authorId: profile.userId,
     });
     console.log("The post is: ", newPost);
     await newPost.save();
