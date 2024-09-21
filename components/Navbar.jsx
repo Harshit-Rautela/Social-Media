@@ -1,14 +1,15 @@
-'use client';
-import { useRouter } from 'next/navigation';
-import { signOut } from 'next-auth/react';
-import Link from 'next/link';
+"use client";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
+import Link from "next/link";
+import SearchBar from "./SearchBar";
 
 const Navbar = () => {
   const router = useRouter();
 
   const handleLogout = async () => {
     await signOut();
-    router.push('/auth/login');
+    router.push("/auth/login");
   };
 
   return (
@@ -16,18 +17,32 @@ const Navbar = () => {
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex space-x-4 flex-grow justify-center">
           <Link href="/profile">
-            <button className="hover:text-gray-300 font-semibold">Profile</button>
+            <button className="hover:text-gray-300 font-semibold">
+              Profile
+            </button>
           </Link>
           <Link href="/profile/allPosts">
-            <button className="hover:text-gray-300 font-semibold">All Posts</button>
+            <button className="hover:text-gray-300 font-semibold">
+              All Posts
+            </button>
           </Link>
           <Link href="/profile/create">
-            <button className="hover:text-gray-300 font-semibold">Create Post</button>
+            <button className="hover:text-gray-300 font-semibold">
+              Create Post
+            </button>
           </Link>
         </div>
-        <button onClick={handleLogout} className="hover:text-gray-300 font-semibold">
-          Logout
-        </button>
+        <div className="flex items-center space-x-4">
+          <div className="search-bar">
+            <SearchBar />
+          </div>
+          <button
+            onClick={handleLogout}
+            className="hover:text-gray-300 font-semibold"
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </nav>
   );

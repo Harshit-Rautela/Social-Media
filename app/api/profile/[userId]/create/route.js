@@ -43,7 +43,7 @@ export const POST = async (req, { params }) => {
     const privacy = formData.get("privacy");
     let image = "";
     if (imageUrl) {
-      console.log(imageUrl);
+      //console.log(imageUrl);
       const buffer = Buffer.from(await imageUrl.arrayBuffer());
       const optimisedBuffer = await sharp(buffer)
         .resize({ width: 800 }) // Resize to a maximum width of 800px
@@ -63,7 +63,6 @@ export const POST = async (req, { params }) => {
       privacy,
       authorId: profile.userId,
     });
-    console.log("The post is: ", newPost);
     await newPost.save();
     return new Response(JSON.stringify("Post created successfully"), {
       status: 201,

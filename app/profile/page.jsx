@@ -7,7 +7,8 @@ const Profile = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [profile, setProfile] = useState(null);
-  // const [posts,setPosts] = useSession([]);
+
+
 
   useEffect(() => {
     if (status === "loading") return;
