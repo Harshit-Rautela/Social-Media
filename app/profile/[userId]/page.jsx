@@ -58,6 +58,8 @@ const UserProfile = ({ params }) => {
         <div className="flex justify-center">
             <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
             onClick={()=>router.push('/home')}>Back To Home</button>
+            <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
+            onClick={()=>router.push(`/profile/${userId}/posts`)}>View all posts</button>
         </div>
       </div>
     </div>

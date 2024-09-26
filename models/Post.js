@@ -13,7 +13,7 @@ const postSchema = new mongoose.Schema(
     imageUrl: {
       type: String,
       // required: true,
-      default:""
+      default: "",
     },
     authorId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -33,6 +33,16 @@ const postSchema = new mongoose.Schema(
       enum: ["Public", "Friends Only", "Private"],
       default: "Public",
     },
+    likes: {
+      type: Number,
+      default: 0,
+    },
+    likedBy: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Profile",
+      },
+    ],
   },
   {
     timestamps: true,

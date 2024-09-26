@@ -1,14 +1,16 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { useSession } from "next-auth/react";
+import { FaHeart } from "react-icons/fa";
 
-const AllPosts = () => {
+const AllPosts = ({ params }) => {
+  const { userId } = params;
   const {data:session} = useSession()
   const [posts,setPosts] = useState([]);
   useEffect(()=>{
     const getAllPosts = async()=>{
       try {
-        const response = await fetch(`/api/profile/${session.user.id}/allposts`)
+        const response = await fetch(`/api/profile/${userId}/allposts`)
         if(response.ok){
           const postData = await response.json();
           setPosts(postData);
@@ -23,7 +25,23 @@ const AllPosts = () => {
     getAllPosts();
   },[])
   
-  
+  const handleLikes = async(postId,isLiked)=>{
+    console.log(postId)
+    console.log(isLiked)
+    try {
+      const response = await fetch(`/api/profile/${userId}/allposts/${postId}/likes`,{
+        method:isLiked ? 'DELETE' : 'POST', 
+        body: JSON.stringify({ userID: session.user.id }),  
+      })
+      if(!response.ok) throw new Error('Could not like the post');
+      setPosts((prevPosts)=>
+      prevPosts.map((post)=>
+      post._id===postId ?{...post , liked:!isLiked , likes:isLiked?post.likes-1:post.likes+1}:post))
+             
+    } catch (error) {
+      console.log('The error is:',error);
+    }
+  }
   return (
     <div className="min-h-screen bg-gray-100 py-10">
       <div className="max-w-4xl mx-auto px-4">
@@ -48,8 +66,14 @@ const AllPosts = () => {
                   <p><strong>Location:</strong> {post.location}</p>
                   <p><strong>Privacy:</strong> {post.privacy}</p>
                 </div>
-                <p className="text-sm mt-2 text-gray-950"><strong>Likes:</strong> {post.likes}</p>
-                
+                <div className="mt-4 flex items-center justify-between">
+                  <FaHeart
+                    onClick={() => handleLikes(post._id, post.liked || false)}
+                    className={`cursor-pointer transition-colors duration-300 ${post.liked ? 'text-red-400' : 'text-gray-400'}`}
+                    size={24}
+                  />
+                  
+                </div>
                 
               </div>
             ))}
