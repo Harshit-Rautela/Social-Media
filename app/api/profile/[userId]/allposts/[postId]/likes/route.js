@@ -3,7 +3,6 @@ import Post from "@models/Post";
 import Profile from "@models/Profile";
 
 export const POST = async (req, { params }) => {
-  console.log('Inside the likes section')
   await connectToDB();
   const { userID } = await req.json();
   try {
@@ -37,7 +36,6 @@ export const POST = async (req, { params }) => {
 
 export const DELETE = async (req, { params }) => {
   await connectToDB();
-  console.log('Inside the likes section')
   const { userID } = await req.json();
   try {
     const { postId } = params;

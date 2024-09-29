@@ -1,19 +1,23 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { useSession } from "next-auth/react";
-
+import { AiFillEye } from 'react-icons/ai'; 
+import { useRouter } from 'next/navigation';
 const AllPosts = () => {
-  const {data:session} = useSession()
+  const {data:session} = useSession();
   const [posts,setPosts] = useState([]);
+  const router = useRouter();
   useEffect(()=>{
     const getAllPosts = async()=>{
       try {
-        const response = await fetch(`/api/profile/${session.user.id}/allposts`)
-        if(response.ok){
-          const postData = await response.json();
-          setPosts(postData);
-        }else{
-          throw new Error('Could not fetch the posts');
+        if (session && session.user) {
+          const response = await fetch(`/api/profile/${session.user.id}/allposts`);
+          if (response.ok) {
+            const postData = await response.json();
+            setPosts(postData);
+          } else {
+            throw new Error('Could not fetch the posts');
+          }
         }
         
       } catch (error) {
@@ -23,7 +27,9 @@ const AllPosts = () => {
     getAllPosts();
   },[])
   
-  
+  const detailedPost = (postId)=>{
+    router.push(`/profile/allPosts/${postId}`);
+  }
   return (
     <div className="min-h-screen bg-gray-100 py-10">
       <div className="max-w-4xl mx-auto px-4">
@@ -49,7 +55,14 @@ const AllPosts = () => {
                   <p><strong>Privacy:</strong> {post.privacy}</p>
                 </div>
                 <p className="text-sm mt-2 text-gray-950"><strong>Likes:</strong> {post.likes}</p>
-                
+                <div className="flex justify-end items-center mt-4">
+                  <AiFillEye 
+                    className="text-gray-700 hover:text-gray-900 cursor-pointer" 
+                    size={24} 
+                    onClick={() => detailedPost(post._id)} // Navigate to post detail
+                  />
+                </div>
+
                 
               </div>
             ))}
