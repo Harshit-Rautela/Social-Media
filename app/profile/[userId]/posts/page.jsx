@@ -2,11 +2,14 @@
 import React, { useEffect, useState } from 'react'
 import { useSession } from "next-auth/react";
 import { FaHeart } from "react-icons/fa";
+import { AiFillEye } from 'react-icons/ai'; 
+import { useRouter } from 'next/navigation';
 
 const AllPosts = ({ params }) => {
   const { userId } = params;
   const {data:session} = useSession()
   const [posts,setPosts] = useState([]);
+  const router = useRouter();
   useEffect(()=>{
     const getAllPosts = async()=>{
       try {
@@ -26,8 +29,6 @@ const AllPosts = ({ params }) => {
   },[])
   
   const handleLikes = async(postId,isLiked)=>{
-    console.log(postId)
-    console.log(isLiked)
     try {
       const response = await fetch(`/api/profile/${userId}/allposts/${postId}/likes`,{
         method:isLiked ? 'DELETE' : 'POST', 
@@ -41,6 +42,11 @@ const AllPosts = ({ params }) => {
     } catch (error) {
       console.log('The error is:',error);
     }
+  }
+  const detailedPosts=(postId)=>{
+    router.push(`/profile/${userId}/posts/${postId}`)
+
+
   }
   return (
     <div className="min-h-screen bg-gray-100 py-10">
@@ -73,6 +79,13 @@ const AllPosts = ({ params }) => {
                     size={24}
                   />
                   
+                </div>
+                <div className="flex justify-end items-center mt-4">
+                  <AiFillEye 
+                    className="text-gray-700 hover:text-gray-900 cursor-pointer" 
+                    size={24} 
+                    onClick={() => detailedPosts(post._id)} // Navigate to post detail
+                  />
                 </div>
                 
               </div>
