@@ -21,3 +21,26 @@ export const GET  = async(req,{params})=>{
         })
     }
 }
+
+export const DELETE = async (req, { params }) => {
+    await connectToDB();
+    const { postId } = params;
+  
+    try {
+      const post = await Post.findById(postId);
+      if (!post) {
+        return new Response(JSON.stringify('Post could not be found'), {
+          status: 404,
+        });
+      }
+      await Post.findByIdAndDelete(postId);
+  
+      return new Response(JSON.stringify('Post deleted successfully'), {
+        status: 200,
+      });
+    } catch (error) {
+      return new Response(JSON.stringify('Server error while deleting the post'), {
+        status: 500,
+      });
+    }
+  };

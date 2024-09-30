@@ -1,35 +1,56 @@
-'use client'
-import React, { useEffect, useState } from 'react'
+"use client";
+import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { AiFillEye } from 'react-icons/ai'; 
-import { useRouter } from 'next/navigation';
+import { AiFillEye } from "react-icons/ai";
+import { FaTrash } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 const AllPosts = () => {
-  const {data:session} = useSession();
-  const [posts,setPosts] = useState([]);
+  const { data: session } = useSession();
+  const [posts, setPosts] = useState([]);
   const router = useRouter();
-  useEffect(()=>{
-    const getAllPosts = async()=>{
+  const deletePost = async (postId) => {
+    const confirmed = confirm("Are you sure you want to delete this post?");
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(
+        `/api/profile/${session.user.id}/allposts/${postId}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to delete the post");
+      }
+      // setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+    } catch (error) {
+      console.error("Error deleting post:", error.message);
+    }
+  };
+  useEffect(() => {
+    const getAllPosts = async () => {
       try {
         if (session && session.user) {
-          const response = await fetch(`/api/profile/${session.user.id}/allposts`);
+          const response = await fetch(
+            `/api/profile/${session.user.id}/allposts`
+          );
           if (response.ok) {
             const postData = await response.json();
             setPosts(postData);
           } else {
-            throw new Error('Could not fetch the posts');
+            throw new Error("Could not fetch the posts");
           }
         }
-        
       } catch (error) {
-        console.error(error.message);  
+        console.error(error.message);
       }
-    }
+    };
     getAllPosts();
-  },[])
-  
-  const detailedPost = (postId)=>{
+  }, [deletePost]);
+
+  const detailedPost = (postId) => {
     router.push(`/profile/allPosts/${postId}`);
-  }
+  };
   return (
     <div className="min-h-screen bg-gray-100 py-10">
       <div className="max-w-4xl mx-auto px-4">
@@ -47,32 +68,47 @@ const AllPosts = () => {
                     className="w-full h-40 object-cover rounded-lg mb-4"
                   />
                 )}
-                <h2 className="text-xl font-bold text-gray-800 mb-2">{post.title}</h2>
+                <h2 className="text-xl font-bold text-gray-800 mb-2">
+                  {post.title}
+                </h2>
                 <p className="text-gray-600">{post.content}</p>
                 <div className="mt-4 text-sm text-gray-500">
-                  <p><strong>Tags:</strong> {post.tags}</p>
-                  <p><strong>Location:</strong> {post.location}</p>
-                  <p><strong>Privacy:</strong> {post.privacy}</p>
+                  <p>
+                    <strong>Tags:</strong> {post.tags}
+                  </p>
+                  <p>
+                    <strong>Location:</strong> {post.location}
+                  </p>
+                  <p>
+                    <strong>Privacy:</strong> {post.privacy}
+                  </p>
                 </div>
-                <p className="text-sm mt-2 text-gray-950"><strong>Likes:</strong> {post.likes}</p>
-                <div className="flex justify-end items-center mt-4">
-                  <AiFillEye 
-                    className="text-gray-700 hover:text-gray-900 cursor-pointer" 
-                    size={24} 
-                    onClick={() => detailedPost(post._id)} // Navigate to post detail
+                <p className="text-sm mt-2 text-gray-950">
+                  <strong>Likes:</strong> {post.likes}
+                </p>
+                <div className="flex justify-end items-center space-x-4 mt-4">
+                  <AiFillEye
+                    className="text-gray-700 hover:text-gray-900 cursor-pointer"
+                    size={24}
+                    onClick={() => detailedPost(post._id)}
+                  />
+                  <FaTrash
+                    className="text-red-500 hover:text-red-700 cursor-pointer"
+                    size={20}
+                    onClick={() => deletePost(post._id)}
                   />
                 </div>
-
-                
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-center text-gray-600">You haven't made any posts yet.</p>
+          <p className="text-center text-gray-600">
+            You haven't made any posts yet.
+          </p>
         )}
       </div>
     </div>
   );
-}
+};
 
-export default AllPosts
+export default AllPosts;
