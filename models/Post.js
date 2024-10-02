@@ -44,7 +44,8 @@ const postSchema = new mongoose.Schema(
       },
     ],
     comments: [
-      {
+      { 
+        profilePicture: { type: String, default: "" },
         userName: {
           type: String,
           required: true,

@@ -9,15 +9,16 @@ const DetailedPost = ({ params }) => {
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const router = useRouter();
-  const {postId} = params;
+  const { postId } = params;
 
   useEffect(() => {
     const fetchPostDetails = async () => {
       try {
-        const response = await fetch(`/api/profile/${session.user.id}/allposts/${postId}`);
+        const response = await fetch(
+          `/api/profile/${session.user.id}/allposts/${postId}`
+        );
         if (response.ok) {
-          const data = await response.json();    
-          //console.log(data);
+          const data = await response.json();
           setPost(data);
         } else {
           throw new Error("Could not fetch the required post.");
@@ -28,10 +29,12 @@ const DetailedPost = ({ params }) => {
     };
     const fetchComments = async () => {
       try {
-        const response = await fetch(`/api/profile/${session.user.id}/allposts/${postId}/comments`);
+        const response = await fetch(
+          `/api/profile/${session.user.id}/allposts/${postId}/comments`
+        );
         if (response.ok) {
           const data = await response.json();
-          console.log('The comment data is:',data);
+          console.log("THe data is:", data);
           setComments(data);
         } else {
           throw new Error("Could not fetch the comments.");
@@ -48,30 +51,32 @@ const DetailedPost = ({ params }) => {
   if (!post) return <p>Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 py-10">
       <div className="max-w-4xl mx-auto px-4">
         <button
           onClick={() => router.back()}
-          className="text-gray-600 mb-4 flex items-center"
+          className="text-blue-600 mb-6 flex items-center text-lg hover:text-blue-800 transition"
         >
           <FaArrowLeft className="mr-2" /> Back
         </button>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="bg-white p-8 rounded-lg shadow-lg">
           {post.imageUrl && (
             <img
               src={post.imageUrl}
               alt={post.title}
-              className="w-full h-60 object-cover rounded-lg mb-4"
+              className="w-full h-60 object-cover rounded-lg mb-6 shadow-md"
             />
           )}
 
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
             {post.title}
           </h1>
-          <p className="text-gray-700 mb-6">{post.content}</p>
+          <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+            {post.content}
+          </p>
 
-          <div className="mt-4 text-sm text-gray-500">
+          <div className="mt-4 text-sm text-gray-600">
             <p>
               <strong>Tags:</strong> {post.tags.join(", ")}
             </p>
@@ -82,21 +87,37 @@ const DetailedPost = ({ params }) => {
               <strong>Privacy:</strong> {post.privacy}
             </p>
           </div>
-          <div className="flex items-center justify-between mt-6">
+
+          <div className="flex items-center justify-between mt-8">
             <p className="text-lg font-semibold text-gray-700">
-              Likes: {post.likes}
+              Likes: <span className="text-red-500">{post.likes}</span>
             </p>
+            <FaHeart className="text-red-500 text-2xl" />
           </div>
-          <div className="mt-8">
-            <h2 className="text-2xl font-semibold text-gray-800">Comments</h2>
+
+          <div className="mt-10">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              Comments
+            </h2>
             {comments.length > 0 ? (
-              <ul className="mt-4 bg-gray-600">
+              <ul className="space-y-4">
                 {comments.map((comment, index) => (
-                  <li key={index} className="bg-gray-800 p-4 rounded-lg mb-4">
-                    <p className="font-semibold">
-                      {comment.userName}:
-                    </p>
-                    <p>{comment.text}</p>
+                  <li
+                    key={index}
+                    className="bg-gray-100 p-4 rounded-lg shadow-sm"
+                  >
+                  
+                    <div className="flex items-center mb-2">
+                      <img
+                        src={comment.profilePicture} 
+                        alt={`${comment.userName}'s profile`}
+                        className="w-10 h-10 rounded-full object-cover mr-4" 
+                      />
+                      <p className="font-semibold text-gray-800">
+                        {comment.userName}
+                      </p>
+                    </div>
+                    <p className="text-gray-600">{comment.text}</p>
                   </li>
                 ))}
               </ul>
@@ -109,6 +130,5 @@ const DetailedPost = ({ params }) => {
     </div>
   );
 };
-
 
 export default DetailedPost;

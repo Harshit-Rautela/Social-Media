@@ -19,7 +19,10 @@ export const POST = async (req, { params }) => {
     if (!user) {
       return new Response(JSON.stringify("User not found"), { status: 404 });
     }
+    const profile = await Profile.findOne({userId:userID});
+
     isPost.comments.push({
+      profilePicture:profile.profilePicture,
       userName: user.userName,
       text: comment,
     });
