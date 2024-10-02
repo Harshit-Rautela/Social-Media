@@ -43,6 +43,18 @@ const postSchema = new mongoose.Schema(
         ref: "Profile",
       },
     ],
+    comments: [
+      {
+        userName: {
+          type: String,
+          required: true,
+        },
+        text: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
   },
   {
     timestamps: true,

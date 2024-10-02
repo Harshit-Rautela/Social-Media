@@ -3,6 +3,7 @@ import Post from "@models/Post";
 import Profile from "@models/Profile";
 
 export const POST = async (req, { params }) => {
+  
   await connectToDB();
   const { userID } = await req.json();
   try {

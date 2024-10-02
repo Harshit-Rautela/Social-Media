@@ -22,7 +22,6 @@ const AllPosts = () => {
       if (!response.ok) {
         throw new Error("Failed to delete the post");
       }
-      // setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
     } catch (error) {
       console.error("Error deleting post:", error.message);
     }

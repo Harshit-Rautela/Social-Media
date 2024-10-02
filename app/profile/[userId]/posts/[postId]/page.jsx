@@ -1,22 +1,25 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { FaHeart, FaArrowLeft } from "react-icons/fa";
 
 const DetailedPost = ({ params }) => {
   const { data: session } = useSession();
   const [post, setPost] = useState(null);
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
   const router = useRouter();
-  const { userId,postId } = params;
+  const { userId, postId } = params;
 
   useEffect(() => {
     const fetchPostDetails = async () => {
       try {
-        const response = await fetch(`/api/profile/${session?.user?.id}/allposts/${postId}`);
+        const response = await fetch(
+          `/api/profile/${session?.user?.id}/allposts/${postId}`
+        );
         if (response.ok) {
-          const data = await response.json();    
-          console.log(data);
+          const data = await response.json();
           setPost(data);
         } else {
           throw new Error("Could not fetch the required post.");
@@ -32,22 +35,48 @@ const DetailedPost = ({ params }) => {
   }, [postId, session]);
   const handleLikePost = async (postId, isLiked) => {
     try {
-        const response = await fetch(`/api/profile/${userId}/allposts/${postId}/likes`, {
-          method: isLiked ? 'DELETE' : 'POST',
-          body: JSON.stringify({ userID: session.user.id }),  
-        });
-    
-        if (!response.ok) throw new Error('Could not like the post');
-    
-   
-        setPost((prevPost) => ({
-          ...prevPost,
-          liked: !isLiked,
-          likes: isLiked ? prevPost.likes - 1 : prevPost.likes + 1,
-        }));
-      } catch (error) {
-        console.log('The error is:', error);
+      const response = await fetch(
+        `/api/profile/${userId}/allposts/${postId}/likes`,
+        {
+          method: isLiked ? "DELETE" : "POST",
+          body: JSON.stringify({ userID: session.user.id }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Could not like the post");
+
+      setPost((prevPost) => ({
+        ...prevPost,
+        liked: !isLiked,
+        likes: isLiked ? prevPost.likes - 1 : prevPost.likes + 1,
+      }));
+    } catch (error) {
+      console.log("The error is:", error);
+    }
+  };
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    if (comment.trim() === "") return;
+    try {
+      const response = await fetch(
+        `/api/profile/${userId}/allposts/${postId}/comments`,
+        {
+          method: "POST",
+          body: JSON.stringify({ comment, userID: session.user.id }),
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        console.log('The data is:',data);
+        //console.log(comments);
+        setComments(data);
+        setComment("");
+      } else {
+        throw new Error("Could not submit the comment.");
       }
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   if (!post) return <p>Loading...</p>;
@@ -89,19 +118,50 @@ const DetailedPost = ({ params }) => {
           </div>
 
           <div className="flex items-center justify-between mt-6">
-            
-            <FaHeart 
-              className={`cursor-pointer transition-colors duration-300 ${post.liked ? 'text-red-400' : 'text-gray-400'}`} 
-              size={30} 
-              onClick={() => handleLikePost(post._id, post.liked)} 
+            <FaHeart
+              className={`cursor-pointer transition-colors duration-300 ${
+                post.liked ? "text-red-400" : "text-gray-400"
+              }`}
+              size={30}
+              onClick={() => handleLikePost(post._id, post.liked)}
             />
           </div>
+          {/* Comment section */}
+          <div className="mt-6">
+            <h3 className="text-xl font-bold mb-4 text-black">Comments</h3>
+            {comments.length > 0 ? (
+              comments.map((comment, index) => (
+                <div key={index} className="mb-4 p-4 bg-gray-100 rounded-lg">
+                  <p className="text-gray-50 bg-gray-700">{comment.text}</p>
+                </div>
+              ))
+            ) : (
+              <p>No comments yet.</p>
+            )}
+          </div>
+
+          {/* Comment form */}
+          {session && (
+            <form onSubmit={handleCommentSubmit} className="mt-4">
+              <textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Add a comment..."
+                className="w-full p-3 border border-gray-900 rounded-lg mb-2 bg-gray-800"
+                rows={3}
+              />
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              >
+                Submit Comment
+              </button>
+            </form>
+          )}
         </div>
       </div>
     </div>
   );
 };
-
-
 
 export default DetailedPost;

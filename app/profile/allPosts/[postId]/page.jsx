@@ -7,6 +7,7 @@ import { FaHeart, FaArrowLeft } from "react-icons/fa";
 const DetailedPost = ({ params }) => {
   const { data: session } = useSession();
   const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]);
   const router = useRouter();
   const {postId} = params;
 
@@ -16,7 +17,7 @@ const DetailedPost = ({ params }) => {
         const response = await fetch(`/api/profile/${session.user.id}/allposts/${postId}`);
         if (response.ok) {
           const data = await response.json();    
-          console.log(data);
+          //console.log(data);
           setPost(data);
         } else {
           throw new Error("Could not fetch the required post.");
@@ -25,8 +26,23 @@ const DetailedPost = ({ params }) => {
         console.error(error.message);
       }
     };
+    const fetchComments = async () => {
+      try {
+        const response = await fetch(`/api/profile/${session.user.id}/allposts/${postId}/comments`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log('The comment data is:',data);
+          setComments(data);
+        } else {
+          throw new Error("Could not fetch the comments.");
+        }
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
 
     fetchPostDetails();
+    fetchComments();
   }, [params.postId]);
 
   if (!post) return <p>Loading...</p>;
@@ -70,11 +86,23 @@ const DetailedPost = ({ params }) => {
             <p className="text-lg font-semibold text-gray-700">
               Likes: {post.likes}
             </p>
-            {/* <FaHeart 
-              className={`cursor-pointer transition-colors duration-300 ${post.liked ? 'text-red-400' : 'text-gray-400'}`} 
-              size={30} 
-              onClick={() => handleLikePost(post._id, post.liked)} 
-            /> */}
+          </div>
+          <div className="mt-8">
+            <h2 className="text-2xl font-semibold text-gray-800">Comments</h2>
+            {comments.length > 0 ? (
+              <ul className="mt-4 bg-gray-600">
+                {comments.map((comment, index) => (
+                  <li key={index} className="bg-gray-800 p-4 rounded-lg mb-4">
+                    <p className="font-semibold">
+                      {comment.userName}:
+                    </p>
+                    <p>{comment.text}</p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-600">No comments yet.</p>
+            )}
           </div>
         </div>
       </div>
@@ -82,23 +110,5 @@ const DetailedPost = ({ params }) => {
   );
 };
 
-// const handleLikePost = async (postId, isLiked) => {
-//   try {
-//     const response = await fetch(`/api/posts/${postId}/likes`, {
-//       method: isLiked ? 'DELETE' : 'POST',
-//     });
-
-//     if (!response.ok) throw new Error('Could not update like status');
-
-//     // Handle updating the like status on the page
-//     setPost((prevPost) => ({
-//       ...prevPost,
-//       liked: !isLiked,
-//       likes: isLiked ? prevPost.likes - 1 : prevPost.likes + 1,
-//     }));
-//   } catch (error) {
-//     console.error(error.message);
-//   }
-// };
 
 export default DetailedPost;
