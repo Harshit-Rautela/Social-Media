@@ -4,10 +4,12 @@ import { useSession } from "next-auth/react";
 import { AiFillEye } from "react-icons/ai";
 import { FaTrash } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+
 const AllPosts = () => {
   const { data: session } = useSession();
   const [posts, setPosts] = useState([]);
   const router = useRouter();
+
   const deletePost = async (postId) => {
     const confirmed = confirm("Are you sure you want to delete this post?");
     if (!confirmed) return;
@@ -26,6 +28,7 @@ const AllPosts = () => {
       console.error("Error deleting post:", error.message);
     }
   };
+
   useEffect(() => {
     const getAllPosts = async () => {
       try {
@@ -50,28 +53,36 @@ const AllPosts = () => {
   const detailedPost = (postId) => {
     router.push(`/profile/allPosts/${postId}`);
   };
+
   return (
-    <div className="min-h-screen bg-gray-100 py-10">
-      <div className="max-w-4xl mx-auto px-4">
-        <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
+    <div className="min-h-screen bg-gradient-to-r from-blue-50 to-blue-100 py-10">
+      <div className="max-w-6xl mx-auto px-4">
+        <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">
           Your Posts
         </h1>
         {posts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-lg">
+              <div
+                key={index}
+                className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2 hover:scale-105 duration-300 ease-in-out"
+              >
                 {post.imageUrl && (
                   <img
                     src={post.imageUrl}
                     alt={post.title}
-                    className="w-full h-40 object-cover rounded-lg mb-4"
+                    className="w-full h-48 object-cover rounded-lg mb-4"
                   />
                 )}
-                <h2 className="text-xl font-bold text-gray-800 mb-2">
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">
                   {post.title}
                 </h2>
-                <p className="text-gray-600">{post.content}</p>
-                <div className="mt-4 text-sm text-gray-500">
+                <p className="text-gray-600 mb-4">
+                  {post.content.length > 100
+                    ? post.content.substring(0, 100) + "..."
+                    : post.content}
+                </p>
+                <div className="text-sm text-gray-500 mb-4">
                   <p>
                     <strong>Tags:</strong> {post.tags}
                   </p>
@@ -82,18 +93,18 @@ const AllPosts = () => {
                     <strong>Privacy:</strong> {post.privacy}
                   </p>
                 </div>
-                <p className="text-sm mt-2 text-gray-950">
+                <p className="text-sm font-semibold text-gray-700 mb-2">
                   <strong>Likes:</strong> {post.likes}
                 </p>
-                <div className="flex justify-end items-center space-x-4 mt-4">
+                <div className="flex justify-end items-center space-x-6 mt-4">
                   <AiFillEye
-                    className="text-gray-700 hover:text-gray-900 cursor-pointer"
-                    size={24}
+                    className="text-blue-500 hover:text-blue-700 cursor-pointer"
+                    size={28}
                     onClick={() => detailedPost(post._id)}
                   />
                   <FaTrash
                     className="text-red-500 hover:text-red-700 cursor-pointer"
-                    size={20}
+                    size={24}
                     onClick={() => deletePost(post._id)}
                   />
                 </div>
@@ -101,7 +112,7 @@ const AllPosts = () => {
             ))}
           </div>
         ) : (
-          <p className="text-center text-gray-600">
+          <p className="text-center text-gray-600 text-xl">
             You haven't made any posts yet.
           </p>
         )}
