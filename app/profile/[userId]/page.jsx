@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { FaHome, FaEnvelope, FaPenFancy } from "react-icons/fa"; // Importing icons
 
 const UserProfile = ({ params }) => {
   const { userId } = params;
@@ -32,9 +33,10 @@ const UserProfile = ({ params }) => {
       </div>
     );
   }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounder-lg shadow-lg w-full max-w-md">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-3xl font-bold mb-4 text-center text-gray-800">
           Profile of {profile.userName}
         </h1>
@@ -55,11 +57,28 @@ const UserProfile = ({ params }) => {
             />
           </div>
         )}
-        <div className="flex justify-center">
-            <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
-            onClick={()=>router.push('/home')}>Back To Home</button>
-            <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
-            onClick={()=>router.push(`/profile/${userId}/posts`)}>View all posts</button>
+
+        <div className="flex justify-between mt-4">
+          
+          <button
+            className="flex items-center bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
+            onClick={() => router.push("/home")}
+          >
+            <FaHome className="mr-2" /> Back to Home
+          </button>
+          <button
+            className="flex items-center bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
+            onClick={() => router.push(`/profile/${userId}/posts`)}
+          >
+            <FaPenFancy className="mr-2" /> View All Posts
+          </button>
+
+          <button
+            className="flex items-center bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-300"
+            onClick={() => router.push(`/profile/${userId}/message`)} 
+          >
+            <FaEnvelope className="mr-2" /> Message
+          </button>
         </div>
       </div>
     </div>

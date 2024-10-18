@@ -13,7 +13,6 @@ const SearchBar = () => {
         const response = await fetch(`/api/search?name=${searchTerm}`);
         if (!response.ok) throw new Error("could not fetch users");
         const data = await response.json();
-        console.log('The data is: ',data)
         setSearchResults(data);
       } catch (error) {
         console.log("The error is:", error);

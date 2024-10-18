@@ -2,13 +2,12 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { FaHome, FaEdit } from "react-icons/fa"; // Import icons
 
 const Profile = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [profile, setProfile] = useState(null);
-
-
 
   useEffect(() => {
     if (status === "loading") return;
@@ -29,7 +28,7 @@ const Profile = () => {
     };
     fetchProfileData();
   }, [session, router, status]);
-  
+
   if (status === "loading" || !profile) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-100">
@@ -37,41 +36,39 @@ const Profile = () => {
       </div>
     );
   }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h1 className="text-3xl font-bold mb-4 text-center text-gray-800">
-          Profile of {session.user.name}
-        </h1>
-        <div className="mb-4">
-          <p className="text-lg font-semibold text-gray-700">User ID:</p>
-          <p className="text-gray-600">{profile.userId}</p>
-        </div>
-        <div className="mb-4">
-          <p className="text-lg font-semibold text-gray-700">Bio:</p>
-          <p className="text-gray-600">{profile.bio || "No bio available"}</p>
-        </div>
-        {profile.profilePicture && (
-          <div className="mb-4 flex justify-center">
-            <img
-              src={profile.profilePicture}
-              alt="Profile Picture"
-              className="w-32 h-32 object-cover rounded-full"
-            />
+      <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-3xl"> {/* Enlarged box */}
+        <div className="flex items-center mb-6">
+          {profile.profilePicture && (
+            <div className="w-40 h-40 flex-shrink-0">
+              <img
+                src={profile.profilePicture}
+                alt="Profile Picture"
+                className="w-full h-full object-cover rounded-full"
+              />
+            </div>
+          )}
+          <div className="ml-8">
+            <h1 className="text-4xl font-bold text-gray-800">{session.user.name}</h1> {/* Username beside the photo */}
+            <p className="text-lg text-gray-600 mt-2">{profile.bio || "No bio available"}</p> {/* Bio */}
           </div>
-        )}
-        <div className="flex justify-center">
+        </div>
+
+        <div className="flex justify-between mt-6">
           <button
             onClick={() => router.push("/home")}
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
+            className="flex items-center bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition duration-300"
           >
+            <FaHome className="mr-2" /> {/* Icon added */}
             Back to Home
           </button>
-          <br />
           <button
             onClick={() => router.push("/profile/update")}
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
+            className="flex items-center bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition duration-300"
           >
+            <FaEdit className="mr-2" /> {/* Icon added */}
             Update Profile
           </button>
         </div>

@@ -43,16 +43,13 @@ export const POST = async (req, { params }) => {
     const privacy = formData.get("privacy");
     let image = "";
     if (imageUrl) {
-      //console.log(imageUrl);
       const buffer = Buffer.from(await imageUrl.arrayBuffer());
       const optimisedBuffer = await sharp(buffer)
         .resize({ width: 800 }) // Resize to a maximum width of 800px
         .jpeg({ quality: 90 }) // Convert to JPEG with 80% quality
         .toBuffer();
         const response = await uploadToCloudinary(optimisedBuffer);
-        console.log("The image is:",response);
         image = response.secure_url;
-        console.log("The image URL is:",image)
     }
     const newPost = new Post({
       title,
